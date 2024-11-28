@@ -8,6 +8,9 @@ import platform.Foundation.*
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class IosMsalAuth() : MsalAuth {
+
+    val application = createMSALApplication()
+
     override suspend fun getToken(): String {
 
         var token = ""
@@ -15,7 +18,6 @@ class IosMsalAuth() : MsalAuth {
         try {
             val viewController = getTopViewController()
             val scopes = listOf("User.Read")
-            val application = createMSALApplication()
 
             if (application == null) {
                 println("application is null")
@@ -59,12 +61,7 @@ class IosMsalAuth() : MsalAuth {
 
 fun createMSALApplication(): MSALPublicClientApplication? {
 
-    val msalConfig =
-        MsalConfig(
-            clientId = "",
-            authority = "https://login.microsoftonline.com/",
-            redirectUri = ""
-        )
+    val msalConfig = getMsalConfig()
 
     memScoped {
         try {
@@ -83,7 +80,6 @@ fun createMSALApplication(): MSALPublicClientApplication? {
 
             val application = MSALPublicClientApplication(config, nsErrorPtr.ptr)
 
-            // Check if an error occurred
             val nsError = nsErrorPtr.value
             if (nsError != null) {
                 println("Error occurred: ${nsError.localizedDescription}")
