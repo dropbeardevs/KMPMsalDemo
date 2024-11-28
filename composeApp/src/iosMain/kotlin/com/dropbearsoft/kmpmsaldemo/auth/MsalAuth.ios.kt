@@ -12,29 +12,32 @@ class IosMsalAuth() : MsalAuth {
 
         var token = ""
 
-        val viewController = getTopViewController()
-        val scopes = listOf("User.Read")
-        val application = createMSALApplication()
+        try {
+            val viewController = getTopViewController()
+            val scopes = listOf("User.Read")
+            val application = createMSALApplication()
 
-        if (application == null) {
-            println("application is null")
-            return ""
-        }
-
-        val webParameters = MSALWebviewParameters(authPresentationViewController = viewController)
-        val interactiveParams = MSALInteractiveTokenParameters(scopes = scopes, webviewParameters = webParameters)
-
-        application?.acquireTokenWithParameters(interactiveParams) { result, error ->
-            if (error == null && result != null) {
-                token = result.accessToken
-                val accountIdentifier = result.account?.identifier
-                println("Access Token: $token")
-                println("Account Identifier: $accountIdentifier")
-            } else {
-                println("Error acquiring token: ${error?.localizedDescription}")
+            if (application == null) {
+                println("application is null")
+                return "Invalid Token"
             }
-        }
 
+            val webParameters = MSALWebviewParameters(authPresentationViewController = viewController)
+            val interactiveParams = MSALInteractiveTokenParameters(scopes = scopes, webviewParameters = webParameters)
+
+            application.acquireTokenWithParameters(interactiveParams) { result, error ->
+                if (error == null && result != null) {
+                    token = result.accessToken
+                    val accountIdentifier = result.account.identifier
+                    println("Access Token: $token")
+                    println("Account Identifier: $accountIdentifier")
+                } else {
+                    println("Error acquiring token: ${error?.localizedDescription}")
+                }
+            }
+        } catch (ex: Exception) {
+            println(ex.message)
+        }
         return token
     }
 }
@@ -56,14 +59,12 @@ class IosMsalAuth() : MsalAuth {
 
 fun createMSALApplication(): MSALPublicClientApplication? {
 
-    val clientId = "HELLO"
     val msalConfig =
         MsalConfig(
             clientId = "",
-            authority = "",
+            authority = "https://login.microsoftonline.com/",
             redirectUri = ""
         )
-
 
     memScoped {
         try {
