@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import com.dropbearsoft.kmpmsaldemo.auth.MsalAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ fun App() {
     val insets = WindowInsets.systemBars // Access system bars insets
     val topPadding = with(LocalDensity.current) { insets.getTop(this).toDp() }
     val bottomPadding = with(LocalDensity.current) { insets.getBottom(this).toDp() }
+    var claimsJson by remember { mutableStateOf("") }
 
     val msalAuth = koinInject<MsalAuth>()
     var token by remember { mutableStateOf("") }
@@ -45,6 +47,10 @@ fun App() {
             }) {
                 Text("Login")
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(claimsJson)
         }
     }
 }

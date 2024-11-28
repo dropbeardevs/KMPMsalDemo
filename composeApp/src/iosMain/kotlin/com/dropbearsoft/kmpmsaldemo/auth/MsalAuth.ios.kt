@@ -3,6 +3,7 @@ package com.dropbearsoft.kmpmsaldemo.auth
 import cocoapods.MSAL.*
 import kotlinx.cinterop.ExperimentalForeignApi
 import com.dropbearsoft.kmpmsaldemo.core.getTopViewController
+import com.dropbearsoft.kmpmsaldemo.utils.decodeJwt
 import kotlinx.cinterop.*
 import platform.Foundation.*
 
@@ -31,15 +32,21 @@ class IosMsalAuth() : MsalAuth {
                 if (error == null && result != null) {
                     token = result.accessToken
                     val accountIdentifier = result.account.identifier
+                    val claimsJson = decodeJwt(token).toString()
                     println("Access Token: $token")
                     println("Account Identifier: $accountIdentifier")
+                    println("Claims: $claimsJson")
                 } else {
                     println("Error acquiring token: ${error?.localizedDescription}")
                 }
             }
+
         } catch (ex: Exception) {
             println(ex.message)
         }
+
+
+
         return token
     }
 }
