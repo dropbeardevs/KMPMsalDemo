@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "android-app",
+            "name": "Android",
+            "module": "KMPMsalDemo.composeApp.main",
+        },
+        {
+            "type": "xcode-app",
+            "name": "iosApp",
+            "buildTarget": {
+                "project": "iosApp",
+                "target": "iosApp",
+            },
+            "configuration": "Debug",
+        },
+    ]
+}

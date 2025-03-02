@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.dropbearsoft.kmpmsaldemo.auth.MsalAuth
+import com.dropbearsoft.kmpmsaldemo.student.StudentId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ fun App() {
     var claimsJson by remember { mutableStateOf("") }
 
     val msalAuth = koinInject<MsalAuth>()
+    val studentIdService = koinInject<StudentId>()
     var token by remember { mutableStateOf("") }
 
     MaterialTheme {
@@ -43,6 +45,11 @@ fun App() {
                     } catch (e: Exception) {
                         println(e.message)
                     }
+
+                    val studentId = studentIdService.getStudentId(token)
+
+                    println("StudentID: $studentId")
+
                 }
             }) {
                 Text("Login")
